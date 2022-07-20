@@ -1,13 +1,11 @@
 #!/bin/bash
 
-echo "Running migrations"
+echo "Running database migration"
 
-./cmd/fizzbuzzctl/migrations_up.sh
-
-echo "Building server"
-
-CGO_ENABLED=0 go build -o fizz_buzz ./cmd/fizzbuzzd/main.go
+fizz_buzzctl init
+fizz_buzzctl version
+fizz_buzzctl up
 
 echo "Running server"
 
-./fizz_buzz
+fizz_buzzd
