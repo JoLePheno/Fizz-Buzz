@@ -1,8 +1,8 @@
 FROM golang:latest AS builder
 WORKDIR /build
 COPY . .
-RUN CGO_ENABLED=0 go build -o /build/fizz_buzzd /build/cmd/fizzbuzzd/main.go
-RUN CGO_ENABLED=0 go build -o /build/fizz_buzzctl /build/cmd/fizzbuzzctl/main.go
+RUN CGO_ENABLED=0 go build -o /build/fizz_buzzd /build/cmd/fizzbuzzd/main.go && \
+        CGO_ENABLED=0 go build -o /build/fizz_buzzctl /build/cmd/fizzbuzzctl/main.go
 
 FROM alpine:latest
 WORKDIR /home/leboncoin/app
