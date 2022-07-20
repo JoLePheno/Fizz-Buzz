@@ -48,3 +48,13 @@ func checkIfParametersAreCorrect(in *model.Parameters) error {
 	}
 	return nil
 }
+
+func (f *Fizzbuzz) GetFizzbuzzStats() (map[string]interface{}, error) {
+	resp, err := f.Store.RetrieveMostUsedRequestParameters()
+	if err != nil {
+		return nil, err
+	}
+	return map[string]interface{}{
+		"MostUsedRequest": resp,
+	}, nil
+}

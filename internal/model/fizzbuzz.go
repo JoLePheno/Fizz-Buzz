@@ -8,3 +8,13 @@ type Parameters struct {
 	FirstString  string `json:"str1"`
 	SecondString string `json:"str2"`
 }
+
+type MostUsedParameters struct {
+	TotalOccurence int
+	FirstInteger   int
+	SecondInteger  int
+	Limit          int
+
+	FirstString  string
+	SecondString string
+}

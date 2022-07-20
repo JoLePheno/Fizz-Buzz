@@ -48,3 +48,7 @@ func NewPostgres() *pg.DB {
 
 	return db
 }
+
+func (s *ParametersStore) ClearStore() {
+	s.db.Exec(`TRUNCATE TABLE parameters`)
+}

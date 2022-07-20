@@ -1,15 +1,15 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/go-pg/migrations"
 )
 
 func init() {
-	fmt.Println("init 1_create_parameters_table")
+	log.Default().Println("init 1_create_parameters_table")
 	migrations.MustRegisterTx(func(db migrations.DB) error {
-		fmt.Println("creating table parameters...")
+		log.Default().Println("creating table parameters...")
 		_, err := db.Exec(`CREATE TABLE IF NOT EXISTS parameters (
 			id                  SERIAL PRIMARY KEY,
 
@@ -24,7 +24,7 @@ func init() {
 		);`)
 		return err
 	}, func(db migrations.DB) error {
-		fmt.Println("dropping table parameters...")
+		log.Default().Println("dropping table parameters...")
 		_, err := db.Exec(`DROP TABLE parameters`)
 		return err
 	})

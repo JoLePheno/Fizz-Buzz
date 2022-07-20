@@ -1,7 +1,8 @@
 package postgres
 
 import (
-	"fmt"
+	"errors"
+	"log"
 	"time"
 
 	"github.com/JoLePheno/Fizz-Buzz/internal/model"
@@ -13,6 +14,18 @@ var _ port.Store = (*ParametersStore)(nil)
 
 type ParametersStore struct {
 	db *pg.DB
+}
+
+type paramsDBO struct {
+	Total int   `sql:"total"`
+	ID    int64 `sql:"id"`
+
+	FirstInteger  int `sql:"int1"`
+	SecondInteger int `sql:"int2"`
+	Limit         int `sql:"limit_number"`
+
+	FirstString  string `sql:"str1"`
+	SecondString string `sql:"str2"`
 }
 
 type Parameters struct {
@@ -42,43 +55,49 @@ func (s *ParametersStore) StoreParameters(params *model.Parameters) error {
 			SecondString:  params.SecondString,
 		})
 	}); err != nil {
-		fmt.Println("error when storing params: ", err)
+		log.Default().Println("error when storing params: ", err)
 		return err
 	}
-	fmt.Println("parameters stored")
+	log.Default().Println("parameters stored")
 	return nil
 }
 
-// RetrieveParameters implements port.Store
-func (s *ParametersStore) RetrieveParameters() ([]*model.Parameters, error) {
-	var params []Parameters
+// RetrieveMostUsedRequestParameters implements port.Store
+// Find the top 3 most made request
+func (s *ParametersStore) RetrieveMostUsedRequestParameters() ([]*model.MostUsedParameters, error) {
+	var params []paramsDBO
 	err := s.db.RunInTransaction(func(tx *pg.Tx) error {
-		return tx.Model(&params).Select()
-	},
-	)
+		_, err := tx.Model().
+			Query(&params, `SELECT int1, int2, str1, str2, limit_number, count(*) as total from parameters group by int1, int2, str1, str2, limit_number ORDER BY total DESC;`)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 	if err != nil {
-		fmt.Println("error when fetching parameters: ", err)
-		return nil, err
+		if errors.Is(err, pg.ErrNoRows) { // NO result found we return
+			return nil, nil
+		} else {
+			log.Default().Println("error when fetching parameters: ", err)
+			return nil, err
+		}
 	}
 
-	paramsModel := make([]*model.Parameters, len(params))
+	resp := make([]*model.MostUsedParameters, len(params))
 	for i := range params {
-		paramsModel[i] = convertParamsModelDBOToModel(params[i])
+		resp[i] = convertParamsModelDBOToModel(params[i])
 	}
-	return paramsModel, nil
+	return resp, nil
 }
 
-// RetrieveParameter implements port.Store
-func (s *ParametersStore) RetrieveParameter(param *model.Parameters) ([]*model.Parameters, error) {
-	return nil, nil
-}
-
-func convertParamsModelDBOToModel(p Parameters) *model.Parameters {
-	return &model.Parameters{
-		FirstInteger:  p.FirstInteger,
-		SecondInteger: p.SecondInteger,
-		Limit:         p.Limit,
-		FirstString:   p.FirstString,
-		SecondString:  p.SecondString,
+func convertParamsModelDBOToModel(p paramsDBO) *model.MostUsedParameters {
+	return &model.MostUsedParameters{
+		TotalOccurence: p.Total,
+		FirstInteger:   p.FirstInteger,
+		SecondInteger:  p.SecondInteger,
+		Limit:          p.Limit,
+		FirstString:    p.FirstString,
+		SecondString:   p.SecondString,
 	}
 }
