@@ -10,7 +10,7 @@ The goal is to implement a web server that will expose a REST API endpoint that:
 
 To build the project inside a docker container with a postgres instance use the following command:
 
-´docker-compose build && docker-compose up -d´
+`docker-compose build && docker-compose up -d`
 
 If you have a local postgres instance you can run the project using:
 
@@ -26,7 +26,7 @@ To run test over the poject without postgres instance you can locally use:
 
 `make test`
 
-With postgres instance:
+With postgres instance (before running integration test make sure you have run first the project):
 
 `make docker-integration`
 
