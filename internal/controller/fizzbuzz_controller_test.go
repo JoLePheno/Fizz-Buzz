@@ -1,8 +1,9 @@
-package fizzbuzz
+package controller
 
 import (
 	"testing"
 
+	"github.com/JoLePheno/Fizz-Buzz/internal/adapter/dummy"
 	"github.com/JoLePheno/Fizz-Buzz/internal/model"
 	"github.com/JoLePheno/Fizz-Buzz/internal/port"
 	"github.com/stretchr/testify/require"
@@ -18,7 +19,9 @@ func TestFizzBuzzController(t *testing.T) {
 			SecondString:  "buzz",
 		}
 
-		f := Fizzbuzz{}
+		f := Fizzbuzz{
+			Store: &dummy.DummyStore{},
+		}
 		res, err := f.Do(in)
 		require.NoError(t, err)
 		require.Len(t, res, in.Limit)
@@ -32,7 +35,9 @@ func TestFizzBuzzController(t *testing.T) {
 			SecondString:  "buzz",
 		}
 
-		f := Fizzbuzz{}
+		f := Fizzbuzz{
+			Store: &dummy.DummyStore{},
+		}
 		res, err := f.Do(in)
 		require.Error(t, err, port.ErrInvalidLimit)
 		require.Nil(t, res)
@@ -46,7 +51,9 @@ func TestFizzBuzzController(t *testing.T) {
 			SecondString:  "buzz",
 		}
 
-		f := Fizzbuzz{}
+		f := Fizzbuzz{
+			Store: &dummy.DummyStore{},
+		}
 		res, err := f.Do(in)
 		require.Error(t, err, port.ErrInvalidIntegers)
 		require.Nil(t, res)
@@ -60,23 +67,11 @@ func TestFizzBuzzController(t *testing.T) {
 			SecondString:  "buzz",
 		}
 
-		f := Fizzbuzz{}
+		f := Fizzbuzz{
+			Store: &dummy.DummyStore{},
+		}
 		res, err := f.Do(in)
 		require.Error(t, err, port.ErrInvalidIntegers)
 		require.Nil(t, res)
 	})
-	// t.Run("Big Test", func(t *testing.T) {
-	// 	in := &model.Parameters{
-	// 		FirstInteger:  3,
-	// 		SecondInteger: 5,
-	// 		Limit:         math.MaxInt - 1,
-	// 		FirstString:   "fizz",
-	// 		SecondString:  "buzz",
-	// 	}
-
-	// 	f := Fizzbuzz{}
-	// 	res, err := f.Do(in)
-	// 	require.NoError(t, err)
-	// 	require.Len(t, res, in.Limit)
-	// })
 }

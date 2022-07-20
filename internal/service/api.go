@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/JoLePheno/Fizz-Buzz/internal/controller/fizzbuzz"
+	"github.com/JoLePheno/Fizz-Buzz/internal/controller"
 	"github.com/JoLePheno/Fizz-Buzz/internal/model"
 	"github.com/JoLePheno/Fizz-Buzz/internal/port"
 	"github.com/JoLePheno/Fizz-Buzz/internal/utils"
@@ -14,7 +14,7 @@ import (
 )
 
 type AlgoService struct {
-	FizzbuzzController *fizzbuzz.Fizzbuzz
+	FizzbuzzController *controller.Fizzbuzz
 }
 
 func (s *AlgoService) Router() *mux.Router {

@@ -15,6 +15,7 @@ COPY . ./
 RUN go mod vendor
 
 RUN chmod 755 init.sh
+RUN chmod 755 cmd/fizzbuzzctl/migrations_up.sh
 
 EXPOSE 3000
 

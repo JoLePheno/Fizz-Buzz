@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - ./docker/db:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    restart: always
+
+  app:
+    build: .
+    volumes:
+      - .:/go/src/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      - default
+    links:
+      - postgres
