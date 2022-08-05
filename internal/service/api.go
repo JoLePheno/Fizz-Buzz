@@ -47,9 +47,11 @@ func (a *AlgoService) FizzBuzzHandler() http.Handler {
 		fizzbuzzList, err := a.FizzbuzzController.Do(in)
 		if err != nil {
 			switch {
-			case errors.Is(err, port.ErrInvalidIntegers), errors.Is(err, port.ErrInvalidLimit):
+			case errors.Is(err, port.ErrInvalidIntegers), errors.Is(err, port.ErrInvalidInteger),
+				errors.Is(err, port.ErrInvalidLimit):
 				utils.Respond(w, utils.Message(false, "Invalid request: "+err.Error()), 400)
 			default:
+				log.Default().Println("internal error from fizzbuzz controller, err: ", err)
 				utils.Respond(w, utils.Message(false, "Internal error"), 500)
 			}
 			return
